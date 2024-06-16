@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=20:mem=25gb
 #PBS -l walltime=01:00:00
-#PBS -N py372
+#PBS -N setup_hpc
 
 cd $PBS_O_WORKDIR
 echo "Starting the setup script."

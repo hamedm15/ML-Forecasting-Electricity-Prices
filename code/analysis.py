@@ -56,11 +56,9 @@ def statistical_tests(actual_df,forecasts, norm=1, plots_path='analysis/plots'):
         col: forecasts[col].values.reshape(-1, 24).flatten() for col in forecasts.columns
     })
 
-    # Initialize p-values matrices for GW and DM tests
     p_values_gw = pd.DataFrame(index=forecasts.columns, columns=forecasts.columns)
     p_values_dm = pd.DataFrame(index=forecasts.columns, columns=forecasts.columns)
 
-    # Fill p-values matrices by iterating over all model pairs
     for model1 in forecasts.columns:
         for model2 in forecasts.columns:
             if model1 == model2:
@@ -81,8 +79,6 @@ def statistical_tests(actual_df,forecasts, norm=1, plots_path='analysis/plots'):
                     norm=norm,
                     version='multivariate'
                 )
-
-    # Plot results using predefined plot functions, assuming they can handle the DataFrame structure
     plot_multivariate_GW_test(real_price=pd.DataFrame(actual_df_reshaped), forecasts=forecasts_reshaped, norm=1, title='Multivariate GW Test', savefig=True, path=plots_path)
     plot_multivariate_DM_test(real_price=pd.DataFrame(actual_df_reshaped), forecasts=forecasts_reshaped, norm=1, title='Multivariate DM Test', savefig=True, path=plots_path)
 

@@ -19,6 +19,8 @@ Details on software requirements, installation procedures, and usage guidelines 
 
 ## Acknowlegements
 
+Code from the following open-source library was used when implementing functions.
+
 ### **Epftoolbox**
 
 - [Github Repository](https://github.com/jeslago/epftoolbox) *(AGPL-3.0 License)*

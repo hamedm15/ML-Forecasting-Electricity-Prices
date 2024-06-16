@@ -53,31 +53,25 @@ def process_inputs_for_metrics(p_real, p_pred):
 ########################### EVALUATION METRICS ##############################
 
 def MAE(p_real, p_pred):
-    # Checking if inputs are compatible
     p_real, p_pred = process_inputs_for_metrics(p_real, p_pred)
 
     return np.mean(np.abs(p_real - p_pred))
 
 def sMAPE(p_real, p_pred):
-    # Checking if inputs are compatible
     p_real, p_pred = process_inputs_for_metrics(p_real, p_pred)
 
     return np.mean(np.abs(p_real - p_pred) / ((np.abs(p_real) + np.abs(p_pred)) / 2))
 
 def RMSE(p_real, p_pred):
-    # Checking if inputs are compatible
     p_real, p_pred = process_inputs_for_metrics(p_real, p_pred)
 
     return np.sqrt(np.mean((p_real - p_pred)**2))
 
 def MAPE(p_real, p_pred, noNaN=False):
-    # Checking if inputs are compatible
     p_real, p_pred = process_inputs_for_metrics(p_real, p_pred)
 
-    # Computing MAPE at every time point
     mape = np.abs(p_real - p_pred) / np.abs(p_real)
 
-    # Eliminating NaN values if requested and averaging
     if noNaN:
         mape = np.mean(mape[np.isfinite(mape)])
     else:
@@ -92,7 +86,6 @@ def rMAE(p_real, p_pred, naive_mae):
 
 
 def calculate_error_metrics(df, naive_forecast_path = None):
-    # Assuming 'Ytrue' is the true values column and all other columns are predictions
     prediction_columns = [col for col in df.columns if col != 'Actual']
     error_metrics = {'MAE': [], 'sMAPE': [], 'RMSE': [], 'MAPE': [], 'rMAE': []}
 
@@ -102,26 +95,22 @@ def calculate_error_metrics(df, naive_forecast_path = None):
         naive_df = pd.read_csv(naive_forecast_path)
         naive_MAE = MAE(naive_df['Day-ahead Price [GBP/MWh]'], naive_df['Forecasted Price [GBP/MWh]'])
     
-    # Compute metrics for each prediction column
     for col in prediction_columns:
         p_real = df['Actual']
         p_pred = df[col]
 
-        # Calculate each metric
         mae = MAE(p_real, p_pred)
         smape = sMAPE(p_real, p_pred)
         rmse = RMSE(p_real, p_pred)
         mape = MAPE(p_real, p_pred)
         rmae = rMAE(p_real, p_pred, naive_mae= naive_MAE) 
 
-        # Append the calculated metrics to the dictionary
         error_metrics['MAE'].append(mae)
         error_metrics['sMAPE'].append(smape)
         error_metrics['RMSE'].append(rmse)
         error_metrics['MAPE'].append(mape)
         error_metrics['rMAE'].append(rmae)
 
-    # Creating a DataFrame from the metrics dictionary
     metrics_df = pd.DataFrame(error_metrics, index=prediction_columns)
     metrics_df.columns.name = 'Metric'
 
@@ -194,21 +183,16 @@ def get_naive_results(data_path, naive_path = 'forecasts/naive_forecast.csv'):
 
 def copy_csv_files(directory_path):
     for filename in os.listdir(directory_path):
-        # Check if the file is a CSV file
         if filename.endswith(".csv") and "CAL_" in filename:
-            # Extract the number following "CAL_" from the filename
-            start_index = filename.index("CAL_") + 4  # Start after "CAL_"
-            end_index = filename.index("_", start_index)  # End at the next "_"
-            number = filename[start_index:end_index]  # Extract the number
+            start_index = filename.index("CAL_") + 4  
+            end_index = filename.index("_", start_index) 
+            number = filename[start_index:end_index] 
 
-            # Construct the new filename
             new_filename = f"win_{number}.csv"
             
-            # Full paths for source and destination files
             src_path = os.path.join(directory_path, filename)
             dest_path = os.path.join(directory_path, new_filename)
 
-            # Copy the file to the new filename in the same directory
             if not os.path.exists(dest_path):
                 shutil.copy(src_path, dest_path)
                 print(f"Copied {filename} to {new_filename}")
@@ -251,15 +235,11 @@ def get_data_dnn(results_path, calibration_windows):
         if window == 28:
             start_date = pd.to_datetime('2022-12-09 01:00:00+00:00')
             date_range = pd.date_range(start=start_date, periods=len(df), freq='H')
-            # clean_df = df.copy().drop(columns=['Date','Best Alpha','Dual gap','Iterations','Yp'])
             clean_df = df.copy().drop(columns=['Yp'])
             clean_df['Datetime'] = date_range
             clean_df = clean_df.set_index('Datetime')
         
         clean_df[f'Predicted {window}'] = predictions
-
-
-    # Calculate the mean across the specified predicted columns
 
     predicted_columns = [col for col in clean_df.columns if 'Predicted' in col]
     og_df = clean_df.copy()

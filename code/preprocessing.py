@@ -466,8 +466,8 @@ def save_data_per_hour(dataset,hour_data_dir):
     X, y, dates = get_data_per_hour(dataset)  # Call get_data_per_hour once for all data
     for hour in range(24):
         X_hour = X[hour]
-        y_hour = pd.DataFrame(y[hour], columns=['Target'])  # Convert y data to DataFrame
-        dates_hour = pd.DataFrame(dates[hour], columns=['Date'])  # Convert y data to DataFrame
+        y_hour = pd.DataFrame(y[hour], columns=['Target'])  
+        dates_hour = pd.DataFrame(dates[hour], columns=['Date'])
 
         for i in range(1, 8):
             X_hour[f'd{i}'] = 0
