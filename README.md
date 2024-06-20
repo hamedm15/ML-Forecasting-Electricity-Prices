@@ -15,12 +15,58 @@ The application of Neural Networks (NN) in trading and price forecasting in ener
 
 ## Installation and Usage
 
-Details on software requirements, installation procedures, and usage guidelines will be provided here.
+### - Getting Started
+
+Clone the repository and navigate to the directory
+```bash
+$ git clone https://github.com/hamedm15/ML-Forecasting-Electricity-Prices.git
+$ cd ML-Forecasting-Electricity-Prices
+```
+**LOCAL :** Run [`setup.sh`](setup.sh) to create the conda environments and install all the required dependencies to avoid conflicts
+```bash
+./setup.sh
+```
+**HPC :** After SSHing into the server and cloning the repository, run [`setup_hpc.sh`](setup_hpc.sh)
+
+```bash
+./setup_hpc.sh
+```
+###  - Running the forecasting models
+
+This repository provides three modelling frameworks for electricity price forecasting:
+
+- [`gLEAR`](code/eval_lear.py) - Global *(fully multivariate)* LASSO Estiamted Autoregressive Model
+- [`24LEAR`](code/eval_lear.py) - Separable *(set of 24 univariate)* LASSO Estiamted Autoregressive Models
+- [`DNN`](code/eval_dnn.py) - Deep Neural Netowork Model
+
+
+The code below, runs all three frameworks over all the specified calibration windows
+
+**LOCAL :**
+```bash
+chmod +x run.sh
+./run.sh
+```
+**HPC :** 
+```bash
+chmod +x run_hpc.sh
+screen
+./run_hpc.sh
+```
+
+Navigate to the examples folder and check the existing examples to get you started. The examples include several applications of the two state-of-the art forecasting model: a deep neural net and the LEAR model.
+
+### - Code Structure
+- Data management : [`preprocessing.py`](code/preprocessing.py.py).
+- Forecasting Models : [`LEAR.py`](code/lear.py) and [`DNN.py`](code/dnn.py).
+- Python Notebook to display results and plots : [`analysis.ipynb`](code/analysis.ipynb).
+- Diebold-Mariano (DM) and Giacomini-White (GW) tests : [`statisticaltests.py`](code/statisticaltests.py).
+- Auxiliary Functions : [`auxiliary.py`](code/auxiliary.py).
+
 
 ## Acknowlegements
 
-Code from the following open-source library was used when implementing functions.
-
+Code was adapted and taken from the following open-source library
 ### **Epftoolbox**
 
 - [Github Repository](https://github.com/jeslago/epftoolbox) *(AGPL-3.0 License)*
